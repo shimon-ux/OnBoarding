@@ -18,71 +18,93 @@
 html{direction:rtl}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
 
+/* ── header ── */
 .header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
 .header-row{max-width:640px;margin:0 auto;padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between}
 .header-title{font-size:15px;font-weight:700;color:var(--text)}
-.header-end{display:flex;align-items:center;gap:10px}
-.header-count{font-size:12.5px;color:var(--text-3);font-variant-numeric:tabular-nums}
-.header-count strong{color:var(--text-2);font-weight:600}
+.header-end{display:flex;align-items:center;gap:12px}
+.header-pct{font-size:22px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1;transition:color .4s}
+.header-pct.done{color:var(--green)}
+.header-mot{font-size:11.5px;color:var(--text-3);font-weight:500;transition:color .3s}
 .print-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:5px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-3);transition:all .12s;font-family:inherit}
 .print-btn:hover{border-color:var(--border-2);color:var(--text-2)}
 .print-btn svg{width:12px;height:12px}
-.prog-track{height:3px;background:var(--border);direction:ltr}
-.prog-fill{height:3px;background:var(--accent);transition:width .35s ease}
-.prog-fill.done{background:var(--green)}
 
+/* ── progress bar ── */
+.prog-wrap{max-width:640px;margin:0 auto;padding:0 20px 10px}
+.prog-track{height:6px;background:var(--border);border-radius:99px;overflow:hidden;direction:ltr}
+.prog-fill{height:6px;background:var(--accent);border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1),background .4s}
+.prog-fill.done{background:var(--green);box-shadow:0 0 10px rgba(5,150,105,.4)}
+
+/* ── sections ── */
 main{max-width:640px;margin:0 auto;padding:20px}
-
-.section{background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.section{background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden;transition:border-color .3s}
+.section.all-done{border-color:var(--green-l);animation:secPop .3s ease}
 .sec-hdr{padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background .1s}
 .sec-hdr:hover{background:var(--bg)}
-.sec-title{font-size:13.5px;font-weight:700;flex:1}
+.sec-title{font-size:13.5px;font-weight:700;flex:1;transition:color .25s}
 .sec-chev{width:14px;height:14px;color:var(--text-3);transition:transform .18s;flex-shrink:0}
 .section.collapsed .sec-chev{transform:rotate(90deg)}
+.sec-tick{width:16px;height:16px;flex-shrink:0;opacity:0;transition:opacity .25s;color:var(--green)}
+.section.all-done .sec-tick{opacity:1}
+.section.all-done .sec-hdr{background:var(--green-l)}
+.section.all-done .sec-title{color:var(--green)}
 .sec-body{border-top:1px solid var(--border)}
 .section.collapsed .sec-body{display:none}
 
+/* ── items ── */
 .item{display:flex;align-items:flex-start;gap:11px;padding:10px 16px;cursor:pointer;transition:background .08s}
 .item:hover{background:var(--bg)}
 .item+.item{border-top:1px solid var(--border)}
-.chk{width:17px;height:17px;border:2px solid var(--border-2);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.chk svg{width:10px;height:10px;color:#fff;opacity:0;transform:scale(.4);transition:all .15s}
-.item.done .chk{background:var(--green);border-color:var(--green)}
+.chk{width:18px;height:18px;border:2px solid var(--border-2);border-radius:5px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.chk svg{width:10px;height:10px;color:#fff;opacity:0;transform:scale(.3);transition:opacity .15s,transform .15s}
+.item.done .chk{background:var(--green);border-color:var(--green);animation:chkPop .22s ease}
 .item.done .chk svg{opacity:1;transform:scale(1)}
 .item-body{flex:1}
-.item-text{font-size:13px;color:var(--text-2);line-height:1.55;transition:color .15s}
-.item.done .item-text{color:var(--text-3);text-decoration:line-through;text-decoration-color:var(--border-2)}
+.item-text{font-size:13px;color:var(--text-2);line-height:1.55;transition:color .2s}
+.item.done .item-text{color:var(--text-3);text-decoration:line-through;text-decoration-color:#E5E7EB}
 .item-note{font-size:11.5px;color:var(--text-3);margin-top:2px;line-height:1.45;display:block}
-.item.done .item-note{color:var(--border-2)}
+.item.done .item-note{color:#E5E7EB}
 
-.section.all-done .sec-hdr{background:var(--green-l)}
-.section.all-done .sec-title{color:var(--green)}
+/* ── completion banner ── */
+.done-banner{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--green);color:#fff;padding:13px 28px;border-radius:12px;font-weight:700;font-size:14px;z-index:200;box-shadow:0 8px 32px rgba(5,150,105,.35);opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;white-space:nowrap;text-align:center;direction:rtl}
+.done-banner.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── animations ── */
+@keyframes chkPop{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes secPop{0%{transform:scale(1)}40%{transform:scale(1.008)}100%{transform:scale(1)}}
 
 @media print{
   .header{position:static}
-  .print-btn{display:none!important}
+  .print-btn,.done-banner{display:none!important}
   .prog-track{display:none}
   .section.collapsed .sec-body{display:block!important}
   body{background:#fff}
   .section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}
-  .item:hover,.sec-hdr:hover{background:transparent}
 }
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
 <div class="header">
   <div class="header-row">
     <div class="header-title">הגדרות IT</div>
     <div class="header-end">
-      <div class="header-count"><strong id="prog-done">0</strong> / <span id="prog-total">0</span> הושלמו</div>
+      <div style="text-align:left">
+        <div class="header-pct" id="prog-pct">0%</div>
+        <div class="header-mot" id="prog-mot">בואו נתחיל</div>
+      </div>
       <button class="print-btn" onclick="window.print()">
         <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a1 1 0 001 1h8a1 1 0 001-1v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-1 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
         הדפסה
       </button>
     </div>
   </div>
-  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
 </div>
+
+<div class="done-banner" id="done-banner">כל ההגדרות הושלמו — ברוך הבא לצוות! 🎉</div>
 
 <main id="main"></main>
 
@@ -93,7 +115,7 @@ const SECTIONS = [
     items:[
       {id:'e1', text:'הורידו והתקינו FortiClient מפורטל ה-IT'},
       {id:'e2', text:'פתחו FortiClient, לחצו "Remote Access" והזינו את כתובת השרת שמסרה מחלקת IT'},
-      {id:'e3', text:'התחברו עם פרטי החברה וודאו שהסטטוס "Connected"', note:'חובה להתחבר ל-VPN לפני כל עבודה מחוץ למשרד'},
+      {id:'e3', text:'התחברו עם פרטי החברה וודאו שהסטטוס "Connected"', note:'חובה להתחבר ל-VPN בכל עבודה מחוץ למשרד'},
       {id:'e4', text:'בדיקה: נסו לפתוח כלי פנימי של החברה בזמן שמחוברים'},
     ]
   },
@@ -133,12 +155,21 @@ const SECTIONS = [
   },
 ];
 
-let state = {};
+const MOTIVATION = [
+  [0,   'בואו נתחיל'],
+  [1,   'מתחילים! 💪'],
+  [30,  'ממשיכים...'],
+  [50,  'יותר ממחצית! 🔥'],
+  [75,  'כמעט שם!'],
+  [95,  'עוד צעד אחד!'],
+  [100, 'סיימת! 🎉'],
+];
+
+let state = {}, confettiFired = false;
 try{ state = JSON.parse(localStorage.getItem('ob-he')||'{}'); }catch(e){}
 function save(){ localStorage.setItem('ob-he', JSON.stringify(state)); }
 
 const total = SECTIONS.reduce((n,s)=>n+s.items.length,0);
-document.getElementById('prog-total').textContent = total;
 
 function toggle(id){
   state[id] = !state[id];
@@ -156,27 +187,72 @@ function updateSection(sec){
 
 function updateProgress(){
   const done = SECTIONS.flatMap(s=>s.items).filter(i=>state[i.id]).length;
-  document.getElementById('prog-done').textContent = done;
-  const pct = total ? done/total*100 : 0;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('prog-pct').textContent = pct+'%';
+  document.getElementById('prog-pct').classList.toggle('done', pct===100);
   const fill = document.getElementById('prog-fill');
   fill.style.width = pct+'%';
-  fill.classList.toggle('done', done===total);
+  fill.classList.toggle('done', pct===100);
+  const mot = [...MOTIVATION].reverse().find(([t])=>pct>=t);
+  document.getElementById('prog-mot').textContent = mot ? mot[1] : '';
+  if(pct===100 && !confettiFired){ confettiFired=true; celebrate(); }
+  if(pct<100) confettiFired=false;
+}
+
+function celebrate(){
+  // banner
+  const banner = document.getElementById('done-banner');
+  banner.classList.add('show');
+  setTimeout(()=>banner.classList.remove('show'), 4000);
+  // confetti
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:999';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  canvas.width = innerWidth; canvas.height = innerHeight;
+  const cols = ['#1D4ED8','#059669','#F59E0B','#EC4899','#8B5CF6','#10B981'];
+  const P = Array.from({length:90},()=>({
+    x: Math.random()*canvas.width, y: -12,
+    vx:(Math.random()-.5)*5, vy:Math.random()*3+2,
+    color:cols[Math.floor(Math.random()*cols.length)],
+    w:Math.random()*9+4, h:Math.random()*5+3,
+    rot:Math.random()*360, rv:(Math.random()-.5)*8,
+  }));
+  let f=0;
+  (function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    P.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.06; p.rot+=p.rv;
+      ctx.save();
+      ctx.globalAlpha=Math.max(0,1-f/130);
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    });
+    if(++f<160) requestAnimationFrame(draw); else canvas.remove();
+  })();
 }
 
 function toggleSection(id){
   document.getElementById('sec-'+id).classList.toggle('collapsed');
 }
 
+const CHECK_SVG = `<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>`;
+const TICK_SVG = `<svg class="sec-tick" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm3.293-9.707a1 1 0 00-1.414-1.414L7 7.172 5.707 5.879a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l3-3z" clip-rule="evenodd"/></svg>`;
+const CHEV_SVG = `<svg class="sec-chev" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>`;
+
 document.getElementById('main').innerHTML = SECTIONS.map(sec=>{
   const allDone = sec.items.every(i=>state[i.id]);
   return `<div class="section${allDone?' all-done':''}" id="sec-${sec.id}">
     <div class="sec-hdr" onclick="toggleSection('${sec.id}')">
       <span class="sec-title">${sec.title}</span>
-      <svg class="sec-chev" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+      ${TICK_SVG}${CHEV_SVG}
     </div>
     <div class="sec-body">${sec.items.map(item=>`
       <div class="item${state[item.id]?' done':''}" id="i-${item.id}" onclick="toggle('${item.id}')">
-        <div class="chk"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg></div>
+        <div class="chk">${CHECK_SVG}</div>
         <div class="item-body"><span class="item-text">${item.text}</span>${item.note?`<span class="item-note">${item.note}</span>`:''}</div>
       </div>`).join('')}
     </div>
