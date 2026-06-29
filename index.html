@@ -1,0 +1,187 @@
+
+<title>הגדרות IT</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✅</text></svg>">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --text:#111827;
+  --text-2:#4B5563;
+  --text-3:#9CA3AF;
+  --accent:#1D4ED8;
+  --green:#059669;
+  --green-l:#ECFDF5;
+  --border:#E5E7EB;
+  --border-2:#D1D5DB;
+  --bg:#F3F4F6;
+}
+html{direction:rtl}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+.header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.header-row{max-width:640px;margin:0 auto;padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between}
+.header-title{font-size:15px;font-weight:700;color:var(--text)}
+.header-end{display:flex;align-items:center;gap:10px}
+.header-count{font-size:12.5px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.header-count strong{color:var(--text-2);font-weight:600}
+.print-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:5px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-3);transition:all .12s;font-family:inherit}
+.print-btn:hover{border-color:var(--border-2);color:var(--text-2)}
+.print-btn svg{width:12px;height:12px}
+.prog-track{height:3px;background:var(--border);direction:ltr}
+.prog-fill{height:3px;background:var(--accent);transition:width .35s ease}
+.prog-fill.done{background:var(--green)}
+
+main{max-width:640px;margin:0 auto;padding:20px}
+
+.section{background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background .1s}
+.sec-hdr:hover{background:var(--bg)}
+.sec-title{font-size:13.5px;font-weight:700;flex:1}
+.sec-chev{width:14px;height:14px;color:var(--text-3);transition:transform .18s;flex-shrink:0}
+.section.collapsed .sec-chev{transform:rotate(90deg)}
+.sec-body{border-top:1px solid var(--border)}
+.section.collapsed .sec-body{display:none}
+
+.item{display:flex;align-items:flex-start;gap:11px;padding:10px 16px;cursor:pointer;transition:background .08s}
+.item:hover{background:var(--bg)}
+.item+.item{border-top:1px solid var(--border)}
+.chk{width:17px;height:17px;border:2px solid var(--border-2);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.chk svg{width:10px;height:10px;color:#fff;opacity:0;transform:scale(.4);transition:all .15s}
+.item.done .chk{background:var(--green);border-color:var(--green)}
+.item.done .chk svg{opacity:1;transform:scale(1)}
+.item-body{flex:1}
+.item-text{font-size:13px;color:var(--text-2);line-height:1.55;transition:color .15s}
+.item.done .item-text{color:var(--text-3);text-decoration:line-through;text-decoration-color:var(--border-2)}
+.item-note{font-size:11.5px;color:var(--text-3);margin-top:2px;line-height:1.45;display:block}
+.item.done .item-note{color:var(--border-2)}
+
+.section.all-done .sec-hdr{background:var(--green-l)}
+.section.all-done .sec-title{color:var(--green)}
+
+@media print{
+  .header{position:static}
+  .print-btn{display:none!important}
+  .prog-track{display:none}
+  .section.collapsed .sec-body{display:block!important}
+  body{background:#fff}
+  .section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}
+  .item:hover,.sec-hdr:hover{background:transparent}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="header">
+  <div class="header-row">
+    <div class="header-title">הגדרות IT</div>
+    <div class="header-end">
+      <div class="header-count"><strong id="prog-done">0</strong> / <span id="prog-total">0</span> הושלמו</div>
+      <button class="print-btn" onclick="window.print()">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a1 1 0 001 1h8a1 1 0 001-1v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-1 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+        הדפסה
+      </button>
+    </div>
+  </div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<main id="main"></main>
+
+<script>
+const SECTIONS = [
+  {
+    id:'s1', title:'FortiClient — חיבור VPN',
+    items:[
+      {id:'e1', text:'הורידו והתקינו FortiClient מפורטל ה-IT'},
+      {id:'e2', text:'פתחו FortiClient, לחצו "Remote Access" והזינו את כתובת השרת שמסרה מחלקת IT'},
+      {id:'e3', text:'התחברו עם פרטי החברה וודאו שהסטטוס "Connected"', note:'חובה להתחבר ל-VPN לפני כל עבודה מחוץ למשרד'},
+      {id:'e4', text:'בדיקה: נסו לפתוח כלי פנימי של החברה בזמן שמחוברים'},
+    ]
+  },
+  {
+    id:'s2', title:'אימות דו-שלבי (MFA)',
+    items:[
+      {id:'e5', text:'התקינו Microsoft Authenticator בטלפון', note:'App Store או Google Play — חינמי'},
+      {id:'e6', text:'מהמחשב: היכנסו ל-aka.ms/mfasetup ועקבו אחרי ההוראות'},
+      {id:'e7', text:'סרקו את קוד ה-QR עם אפליקציית Authenticator'},
+      {id:'e8', text:'הוסיפו מספר טלפון כשיטת גיבוי לקבלת SMS'},
+      {id:'e9', text:'בדיקה: צאו מחשבון Microsoft 365 וחזרו להיכנס — ודאו שמבקש אימות'},
+    ]
+  },
+  {
+    id:'s3', title:'Microsoft 365',
+    items:[
+      {id:'e10', text:'היכנסו ל-portal.office.com ולחצו "התקן אפליקציות"', note:'אין להוריד ממקורות אחרים — הרישיון קשור לחשבון החברה'},
+      {id:'e11', text:'התקינו את חבילת Office וחכו לסיום (כ-5–10 דקות)'},
+      {id:'e12', text:'פתחו Outlook וודאו שתיבת האימייל של החברה מוגדרת אוטומטית'},
+    ]
+  },
+  {
+    id:'s4', title:'OneDrive',
+    items:[
+      {id:'e13', text:'פתחו OneDrive מ-Start Menu והיכנסו עם חשבון החברה'},
+      {id:'e14', text:'חכו לסיום הסנכרון הראשוני — ודאו שתיקיית OneDrive מופיעה ב-File Explorer'},
+      {id:'e15', text:'כל קובץ עבודה — שמרו ב-OneDrive בלבד', note:'קבצים על שולחן העבודה לא מגובים ועלולים לאבד לצמיתות'},
+    ]
+  },
+  {
+    id:'s5', title:'Microsoft Teams',
+    items:[
+      {id:'e16', text:'פתחו Teams וצרפו את עצמכם לערוץ הכלל-חברתי ולערוץ הצוות', note:'בקשו מהמנהל/ת את שם הערוץ אם לא קיבלתם'},
+      {id:'e17', text:'בצעו שיחת בדיקה לוידוא שמע ומצלמה לפני הפגישה הראשונה'},
+      {id:'e18', text:'השלימו את הדרכת אבטחת המידע', note:'הקישור נשלח לאימייל החברה'},
+    ]
+  },
+];
+
+let state = {};
+try{ state = JSON.parse(localStorage.getItem('ob-he')||'{}'); }catch(e){}
+function save(){ localStorage.setItem('ob-he', JSON.stringify(state)); }
+
+const total = SECTIONS.reduce((n,s)=>n+s.items.length,0);
+document.getElementById('prog-total').textContent = total;
+
+function toggle(id){
+  state[id] = !state[id];
+  save();
+  document.getElementById('i-'+id).classList.toggle('done', state[id]);
+  const sec = SECTIONS.find(s=>s.items.find(i=>i.id===id));
+  if(sec) updateSection(sec);
+  updateProgress();
+}
+
+function updateSection(sec){
+  const done = sec.items.filter(i=>state[i.id]).length;
+  document.getElementById('sec-'+sec.id).classList.toggle('all-done', done===sec.items.length);
+}
+
+function updateProgress(){
+  const done = SECTIONS.flatMap(s=>s.items).filter(i=>state[i.id]).length;
+  document.getElementById('prog-done').textContent = done;
+  const pct = total ? done/total*100 : 0;
+  const fill = document.getElementById('prog-fill');
+  fill.style.width = pct+'%';
+  fill.classList.toggle('done', done===total);
+}
+
+function toggleSection(id){
+  document.getElementById('sec-'+id).classList.toggle('collapsed');
+}
+
+document.getElementById('main').innerHTML = SECTIONS.map(sec=>{
+  const allDone = sec.items.every(i=>state[i.id]);
+  return `<div class="section${allDone?' all-done':''}" id="sec-${sec.id}">
+    <div class="sec-hdr" onclick="toggleSection('${sec.id}')">
+      <span class="sec-title">${sec.title}</span>
+      <svg class="sec-chev" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+    </div>
+    <div class="sec-body">${sec.items.map(item=>`
+      <div class="item${state[item.id]?' done':''}" id="i-${item.id}" onclick="toggle('${item.id}')">
+        <div class="chk"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5 6 4.5 9 10.5 3"/></svg></div>
+        <div class="item-body"><span class="item-text">${item.text}</span>${item.note?`<span class="item-note">${item.note}</span>`:''}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}).join('');
+
+updateProgress();
+</script>
